@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+
+def Enc(pk, x):
+	#Dummy fuction to encrypt, just for illustration
+	return pk*x
+	
+def Dec(sk, x):
+	#Dummy function to decrypt, just for illustration
+	return sk*x
+
+def alice():
+	#Alice generates a pair or private key and secret key
+	pk = 5.0
+	sk = 0.2
+	
+	#Alice has a credit score that bob isn't aware of
+	x = 500.0
+	
+	#Alice encrypts her credit score
+	a = Enc(pk,x)
+	
+	#Alice sends her public key and encrypted credit score to
+    # Bob, receiving a promocode in return
+	m = bob(pk, a)
+	
+	#Alice decrypts the promocode received using her secret key
+	m = Dec(sk, m)
+	
+	#The promocode received is printed on the screen so that we
+    # can test that the program is working correctly
+	print("m = ", m)
+	
+
+def bob(pk, a):
+	
+	#Bob has a minimum credit score threshold y, based on which
+    #promocodes are sent.
+	 y = 310
+	 
+	 #Bob has two promocodes m0 and m1
+	 m0 = 2
+	 m1 = 3
+	 
+	 #Bob encrypts his threshold y using Alice's public key
+	 b = Enc(pk, y)
+	 
+	 #The encryption scheme selected is such that 
+     #a-b = Enc(pk, x-y) and a-b is positibe only is x-y is 
+     #positive, i.e, x > y
+	 
+     diff = a-b
+	 if diff > 0:
+	 	b = 1
+	 else:
+	 	b = 0
+	 
+	 #The formula ends up sending m0 if b=0 and m1 if b=1, even
+     # bob doesn't knows if m0 or m1 has been sent.
+	 m = Enc(pk, b*m1 + (1-b)*m0)
+	 return m
+	
+if __name__ == "__main__":
+    alice()
